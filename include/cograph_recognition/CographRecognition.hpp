@@ -55,11 +55,9 @@ class CographRecognition : public NetworKit::Algorithm {
      * Verify the result found by the algorithm.
      */
     void check() const;
-
-    static bool isComplementReducible(
-        const NetworKit::Graph &graph, const std::vector<NetworKit::node> &X, NetworKit::node v);
+    static int Cograph_Recognition(NetworKit::Graph &graph);
  private:
-    std::optional<NetworKit::Graph> graph;
+    NetworKit::Graph graph;
     State is_complement_reducible;
 
 

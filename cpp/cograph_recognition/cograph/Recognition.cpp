@@ -205,17 +205,17 @@ namespace Koala {
         }
         auto y = x -> get_head_of_list_of_children();
         while(y != nullptr){
-            Made_Queue_Of_Marked(y);
+            Made_Queue_Of_Marked(y, q);
             y = y -> getnext();
         }
     }
 
 
-    CoNode *Find_Lowest( ){
+    CoNode *Find_Lowest( int & error){
         CoNode y(Type::ZEROONE, 2);
         CoNode *z = &y, *u, *w;
         if(T -> getRoot() -> Marked_or_not() == Marked::UNMARKED){
-            is_complement_reducible = State::COND_3;
+            error = 3;
             return z;
         }
         if(T -> getRoot() -> get_md() != T -> getRoot() -> get_d() - 1){
@@ -262,12 +262,12 @@ namespace Koala {
         vector<CoNode*>a;
         int u_number = u -> getnumber();
         if(u_number == 0){
-            a = get_were_marked();
+            a = get_were_marked(T -> getRoot());
         } else{
-            a = get_were_not_marked();
+            a = get_were_not_marked(T -> getRoot());
         }
         if(a.size() == 1){
-            if(a[0].gettype() == Type::VERTEX){
+            if(a[0] -> gettype() == Type::VERTEX){
                 CoNode y(Type::ZEROONE, u_number ^ 1);
                 u->remove_were_marked();
                 u->addchild(&y);
@@ -283,9 +283,9 @@ namespace Koala {
                 y.addchild(v);
             }
             if(u_number == 0){
-                if(u -> getprev() != nullptr)u -> getprev ->setnext(&y);
+                if(u -> getprev() != nullptr)u -> getprev() ->setnext(&y);
                 if(u -> getnext() != nullptr)u -> getnext() -> setprev(&y);
-                y.setParent(u -> parent);
+                y.setParent(u -> getParent());
                 CoNode z(Type::ZEROONE, 0);
                 y.addchild(&z);
                 z.addchild(x);
@@ -299,7 +299,7 @@ namespace Koala {
         }
     }
 
-    void Cograph__Recognition(NetworKit::Graph &graph){
+    int CographRecognition::Cograph_Recognition(NetworKit::Graph &graph){
         G = graph;
         vector<NetworKit::node>vertex;
         vector<CoNode>covertex;
@@ -322,11 +322,11 @@ namespace Koala {
         CoTree Tp(&R);
         T = &Tp;
         if(cnt == 0){
-            return;
+            return 0;
         }
         if(cnt == 1){
             R.addchild(&covertex[0]);
-            return;
+            return 0;
         }
         if(G.hasEdge(vertex[0], vertex[1])){
             R.addchild(&covertex[0]);
@@ -353,11 +353,13 @@ namespace Koala {
                     R2.addchild(&covertex[i]);
                 }
             } else{
-                CoNode* u = Find_Lowest();
-                if(is_complement_reducible != State::UNKNOWN)return;
+                int error = 0;
+                CoNode* u = Find_Lowest(error);
+                if(error)return error;
                 Insert_x_to_CoTree(u, &covertex[i]);
             }
         }
+        return 0;
     }
 
 
