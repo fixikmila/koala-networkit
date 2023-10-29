@@ -199,9 +199,42 @@ namespace Koala {
             y = y -> getnext();
         }
     }
-    CoNode Find_Lowest( ){
-
+    void Made_Queue_Of_Marked(CoNode *x, queue<CoNode*>&q){
+        if(x -> Marked_or_not() == Marked::MARKED){
+            q.push(x);
+        }
+        auto y = x -> get_head_of_list_of_children();
+        while(y != nullptr){
+            Made_Queue_Of_Marked(y);
+            y = y -> getnext();
+        }
     }
+
+
+    CoNode *Find_Lowest( ){
+        CoNode y(Type::ZEROONE, 2);
+        CoNode *z = &y, *u, *w;
+        if(T -> getRoot() -> Marked_or_not() == Marked::UNMARKED){
+            is_complement_reducible = State::COND_3;
+            return z;
+        }
+        if(T -> getRoot() -> get_md() != T -> getRoot() -> get_d() - 1){
+            z = T -> getRoot();
+            T -> getRoot() -> unmark();
+            T -> getRoot() ->set_md(0);
+            u = w = T -> getRoot();
+        }
+        queue<CoNode*>q;
+        Made_Queue_Of_Marked(T -> getRoot(), q);
+        while(!q.empty()){
+            auto u = q.front();
+            q.pop();
+            //if(z -> )
+        }
+    }
+
+
+
     vector<CoNode *> get_were_marked(CoNode *u){
         auto x = u -> get_head_of_list_of_children();
         vector<CoNode *> a;
@@ -211,6 +244,7 @@ namespace Koala {
         }
         return a;
     }
+
     vector<CoNode *> get_were_not_marked(CoNode *u){
         auto x = u -> get_head_of_list_of_children();
         vector<CoNode *> a;
@@ -223,6 +257,7 @@ namespace Koala {
         }
         return a;
     }
+
     void Insert_x_to_CoTree(CoNode *u, CoNode *x){
         vector<CoNode*>a;
         int u_number = u -> getnumber();
@@ -263,6 +298,7 @@ namespace Koala {
             }
         }
     }
+
     void Cograph__Recognition(NetworKit::Graph &graph){
         G = graph;
         vector<NetworKit::node>vertex;
@@ -317,8 +353,9 @@ namespace Koala {
                     R2.addchild(&covertex[i]);
                 }
             } else{
-                CoNode u = Find_Lowest();
-                Insert_x_to_CoTree(&u, &covertex[i]);
+                CoNode* u = Find_Lowest();
+                if(is_complement_reducible != State::UNKNOWN)return;
+                Insert_x_to_CoTree(u, &covertex[i]);
             }
         }
     }
