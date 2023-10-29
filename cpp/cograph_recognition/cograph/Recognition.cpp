@@ -212,14 +212,14 @@ namespace Koala {
 
 
     CoNode *Find_Lowest( int & error){
-        CoNode y(Type::ZEROONE, 2);
-        CoNode *z = &y, *u, *w;
+        CoNode z(Type::ZEROONE, 2);
+        CoNode *y = &z, *u, *w, *t;
         if(T -> getRoot() -> Marked_or_not() == Marked::UNMARKED){
             error = 3;
-            return z;
+            return y;
         }
         if(T -> getRoot() -> get_md() != T -> getRoot() -> get_d() - 1){
-            z = T -> getRoot();
+            y = T -> getRoot();
             T -> getRoot() -> unmark();
             T -> getRoot() ->set_md(0);
             u = w = T -> getRoot();
@@ -227,9 +227,52 @@ namespace Koala {
         queue<CoNode*>q;
         Made_Queue_Of_Marked(T -> getRoot(), q);
         while(!q.empty()){
-            auto u = q.front();
+            u = q.front();
             q.pop();
-            //if(z -> )
+            if(u -> Marked_or_not() != Marked::MARKED)continue;
+            if(y -> getnumber() != 2){//1 or 2
+                error = 1;
+                return y;
+            }
+            if(u -> getnumber() == 1){
+                if(u->get_md() != u -> get_d() - 1){
+                    y = u;
+                    if(u -> getParent() -> Marked_or_not() == Marked::MARKED){//1 and 6
+                        error = 1;
+                        return y;
+                    }
+
+                } else{
+
+                }
+            } else{
+                y = u;
+                t = u -> getParent();
+            }
+            u -> unmark();
+            u ->set_md(0);
+            while(t != w){
+                if(t == T -> getRoot()){//4
+                    error = 4;
+                    return y;
+                }
+                if(t -> Marked_or_not() != Marked::MARKED){//3 or 5 or 6
+                    error = 3;
+                    return y;
+                }
+                if(t -> get_md() != t -> get_d() - 1){//2
+                    error = 2;
+                    return y;
+                }
+                if(t -> getParent() -> Marked_or_not() == Marked::MARKED){//1
+                    error = 1;
+                    return y;
+                }
+                t -> unmark();
+                t ->set_md(0);
+                t = t -> getParent() -> getParent();
+            }
+            w = u;
         }
     }
 
