@@ -4,14 +4,12 @@
 #include <set>
 
 #include <graph/GraphTools.hpp>
-#include <recognition/CographRecognition.hpp>
+#include <cograph_recognition/CographRecognition.hpp>
 
 namespace Koala {
 
 CographRecognition::CographRecognition(NetworKit::Graph &graph)
     : graph(std::make_optional(graph)), is_complement_reducible(State::UNKNOWN) {
-     Marked.resize(graph.n);
-     md.resize(graph.n);
 
      }
 
@@ -30,7 +28,7 @@ void CographRecognition::run() {
     if (is_complement_reducible != State::UNKNOWN) {
         return;
     }
-    Cograph_Recognition(graph);
+    Cograph__Recognition(graph);
     if (is_complement_reducible != State::UNKNOWN) {
             return;
     }

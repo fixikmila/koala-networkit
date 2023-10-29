@@ -13,7 +13,7 @@
 namespace Koala {
 
 
-class CoraphRecognition : public NetworKit::Algorithm {
+class CographRecognition : public NetworKit::Algorithm {
  public:
     
     enum class State {

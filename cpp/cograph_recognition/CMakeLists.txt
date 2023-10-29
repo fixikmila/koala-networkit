@@ -1,4 +1,4 @@
-koala_add_module(recognition
+koala_add_module(corgaph_recognition
    CographRecognition.cpp
    cograph/Recognition.cpp
 )
